@@ -49,6 +49,10 @@ func showParseArgs(c *cli.Context) context.Context {
 		ctx = WithAlsoClip(ctx, c.Bool("alsoclip"))
 	}
 
+	if c.IsSet("alsootp") {
+		ctx = WithAlsoOTP(ctx, c.Bool("alsootp"))
+	}
+
 	if c.IsSet("noparsing") {
 		ctx = ctxutil.WithShowParsing(ctx, !c.Bool("noparsing"))
 	}
@@ -117,7 +121,19 @@ func (s *Action) show(ctx context.Context, c *cli.Context, name string, recurse 
 		return s.showHandleError(ctx, c, name, recurse, err)
 	}
 
-	return s.showHandleOutput(ctx, name, sec)
+	if err := s.showHandleOutput(ctx, name, sec); err != nil {
+		return err
+	}
+
+	if IsAlsoOTP(ctx) {
+		// Writing a QR for the OTP doesn't make sense when showing the password,
+		// nor does it make sense to write it to the clipboard where the password would be.
+		if err := s.othWithSecret(ctx, name, sec, "", false, IsPasswordOnly(ctx)); err != nil {
+			return err
+		}
+	}
+
+	return nil
 }
 
 // showHandleRevision displays a single revision.

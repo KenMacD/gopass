@@ -29,6 +29,11 @@ func ShowFlags() []cli.Flag {
 			Usage:   "Copy the password and show everything",
 		},
 		&cli.BoolFlag{
+			Name:    "alsootp",
+			Aliases: []string{"O"},
+			Usage:   "Show OTP after the password",
+		},
+		&cli.BoolFlag{
 			Name:  "qr",
 			Usage: "Print the password as a QR Code",
 		},

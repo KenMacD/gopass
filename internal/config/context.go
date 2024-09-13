@@ -12,6 +12,7 @@ type contextKey int
 const (
 	ctxKeyConfig contextKey = iota
 	ctxKeyMountPoint
+	ctxKeyAlsoOTP
 )
 
 func (c *Config) WithConfig(ctx context.Context) context.Context {

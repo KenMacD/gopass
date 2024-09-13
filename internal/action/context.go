@@ -12,6 +12,7 @@ const (
 	ctxKeyKey
 	ctxKeyOnlyClip
 	ctxKeyAlsoClip
+	ctxKeyAlsoOTP
 	ctxKeyPrintChars
 )
 
@@ -37,13 +38,27 @@ func WithAlsoClip(ctx context.Context, clip bool) context.Context {
 	return context.WithValue(ctx, ctxKeyAlsoClip, clip)
 }
 
-// IsAlsoClip returns the value for alsoclip of the dfeault (false).
+// IsAlsoClip returns the value for alsoclip of the default (false).
 func IsAlsoClip(ctx context.Context) bool {
 	bv, ok := ctx.Value(ctxKeyAlsoClip).(bool)
 	if !ok {
 		return false
 	}
 
+	return bv
+}
+
+// WithAlsoOTP returns a contet with the value for alsootp set.
+func WithAlsoOTP(ctx context.Context, alsoOTP bool) context.Context {
+	return context.WithValue(ctx, ctxKeyAlsoOTP, alsoOTP)
+}
+
+// IsAlsoOTP returns the value of alsootp or the default (false).
+func IsAlsoOTP(ctx context.Context) bool {
+	bv, ok := ctx.Value(ctxKeyAlsoOTP).(bool)
+	if !ok {
+		return false
+	}
 	return bv
 }
 

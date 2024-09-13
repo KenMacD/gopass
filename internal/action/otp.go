@@ -14,6 +14,7 @@ import (
 	"github.com/gopasspw/gopass/pkg/clipboard"
 	"github.com/gopasspw/gopass/pkg/ctxutil"
 	"github.com/gopasspw/gopass/pkg/debug"
+	"github.com/gopasspw/gopass/pkg/gopass"
 	"github.com/gopasspw/gopass/pkg/otp"
 	"github.com/gopasspw/gopass/pkg/termio"
 	"github.com/mattn/go-tty"
@@ -110,7 +111,11 @@ func (s *Action) otp(ctx context.Context, name, qrf string, clip, pw, recurse bo
 	if err != nil {
 		return s.otpHandleError(ctx, name, qrf, clip, pw, recurse, err)
 	}
+	return s.othWithSecret(ctx, name, sec, qrf, clip, pw)
+}
 
+// nolint: cyclop
+func (s *Action) othWithSecret(ctx context.Context, name string, sec gopass.Secret, qrf string, clip bool, pw bool) error {
 	outerCtx := ctx
 	ctx = config.WithMount(ctx, s.Store.MountPoint(name))
 	ctx, cancel := context.WithCancel(ctx)
